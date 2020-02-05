@@ -26,15 +26,14 @@ public class BootstrapCLR implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         //clear old data
-        movieRepository.deleteAll().block();
-
-        Flux.just("Silance of the Lambdas", "AEon Flux", "Enter the Mono<Void>", "The Fluxxinator",
-                "Back to the Future", "Meet the Fluxes", "Load of the Fluxed")
-                .map(title -> new Movie(title, UUID.randomUUID().toString()))
-                .flatMap(movieRepository::save)
+        movieRepository.deleteAll()
+                .thenMany(
+                        Flux.just("Silance of the Lambdas", "AEon Flux", "Enter the Mono<Void>", "The Fluxxinator",
+                                "Back to the Future", "Meet the Fluxes", "Load of the Fluxed")
+                                .map(title -> new Movie(title))
+                                .flatMap(movieRepository::save))
                 .subscribe(null, null, () -> {
                     movieRepository.findAll().subscribe(System.out::println);
                 });
-
     }
 }

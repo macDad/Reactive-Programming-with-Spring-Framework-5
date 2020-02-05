@@ -23,7 +23,7 @@ public class ReactiveStreamsExamples {
     public void simpleStreamExample2() throws Exception {
         Flux<String> dogs = Flux.just("Vizsla", "Lab", "Golden", "GSP", "Poodle", "Yorkie", "Mutt");
 
-        dogs.toStream().forEach(System.out::println);
+        dogs.subscribe(System.out::println);
     }
 
     @Test
@@ -123,6 +123,8 @@ public class ReactiveStreamsExamples {
         Flux<List<List<Integer>>> listFlux = Flux.just(Arrays.asList(Arrays.asList(1, 2, 3), Arrays.asList(4, 5, 6)));
 
         listFlux.flatMap(lists -> Flux.fromIterable(lists))
+                //[1, 2, 3]
+                //[4, 5, 6]
                 .flatMap(lists -> Flux.fromIterable(lists))
                 .subscribe(System.out::println);
     }
